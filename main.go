@@ -90,10 +90,14 @@ func saveImg(img *image.NRGBA) {
 	cmd.Output()
 }
 
-func reverseArr[T any](arr *[]T) {
-	for i, j := 0, len((*arr))-1; i < j; i, j = i+1, j-1 {
-		(*arr)[i], (*arr)[j] = (*arr)[j], (*arr)[i]
+func reverseArr[T any](arr []T) []T {
+	newArr := []T{}
+
+	for i := len(arr) - 1; i >= 0; i-- {
+		newArr = append(newArr, arr[i])
 	}
+
+	return newArr
 }
 
 func main() {
@@ -112,9 +116,15 @@ func main() {
 		return
 	}
 
-	reverseArr(matrix)
+	reversedMatrix := reverseArr(*matrix)
 
-	newImg := createImgFromMatrix(matrix)
+	combinedMatrix := [][][3]uint8{}
+
+	combinedMatrix = append(combinedMatrix, (*matrix)...)
+
+	combinedMatrix = append(combinedMatrix, reversedMatrix...)
+
+	newImg := createImgFromMatrix(&combinedMatrix)
 
 	fmt.Println("Completed!")
 
